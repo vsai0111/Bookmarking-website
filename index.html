@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookmark Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to Bookmark Manager</h1>
+  </header>
+
+  <main>
+    <section class="bookmark-section">
+      <h2>My Bookmarks</h2>
+      <div id="bookmarks-list">
+        <!-- Display Bookmarks Here -->
+        <!-- Example Structure: -->
+        <!--
+        <div class="bookmark">
+          <h3>Bookmark Title</h3>
+          <p>Bookmark URL</p>
+          <div class="actions">
+            <button>Edit</button>
+            <button>Delete</button>
+          </div>
+        </div>
+        -->
+      </div>
+    </section>
+
+    <section class="add-bookmark-section">
+      <h2>Add a Bookmark</h2>
+      <form id="addBookmarkForm">
+        <label for="bookmarkTitle">Title:</label>
+        <input type="text" id="bookmarkTitle" name="bookmarkTitle" required><br><br>
+        
+        <label for="bookmarkURL">URL:</label>
+        <input type="url" id="bookmarkURL" name="bookmarkURL" required><br><br>
+        
+        <button type="submit">Add Bookmark</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
