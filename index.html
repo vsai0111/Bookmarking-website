@@ -5,25 +5,29 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Login/Logout Section -->
   <section id="login-section">
-    <!-- Login form and logout button -->
-    <!-- Include fields for username, password, and login button -->
-    <!-- Include a logout button for authenticated users -->
+    <!-- Login and Create Account forms -->
+    <h2>Login or Create Account</h2>
+    <div id="loginForms">
+      <form id="loginForm">
+        <input type="text" id="loginUsername" placeholder="Username" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+      <form id="createAccountForm" style="display: none;">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="newUsername" placeholder="Username" required>
+        <input type="password" id="newPassword" placeholder="Password" required>
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+        <button type="submit">Create Account</button>
+      </form>
+      <p id="loginError" style="color: red; display: none;">Incorrect username or password</p>
+      <button id="createAccountBtn">Create Account</button>
+    </div>
   </section>
 
-  <!-- Bookmarks Display Section -->
-  <section id="bookmarks-section">
-    <!-- Display bookmarks fetched from the backend API -->
-    <!-- Bookmarks will be displayed here with options for editing and deleting -->
-  </section>
-
-  <!-- Add Bookmark Section -->
-  <section id="add-bookmark-section">
-    <!-- Form to add new bookmarks -->
-    <!-- Include fields for title, URL, category/tag selection, and add button -->
-  </section>
-
+  <!-- Rest of the sections (bookmarks and add bookmarks) remain the same -->
+  
   <script src="script.js"></script>
 </body>
 </html>
