@@ -1,93 +1,72 @@
 // scripts.js
 document.addEventListener('DOMContentLoaded', function() {
-    const bookmarksList = document.getElementById('bookmarks-list');
-    const addBookmarkForm = document.getElementById('addBookmarkForm');
+  const loginSection = document.getElementById('login-section');
+  const bookmarksSection = document.getElementById('bookmarks-section');
+  const addBookmarkSection = document.getElementById('add-bookmark-section');
+  const loginForm = document.getElementById('loginForm');
+  const logoutButton = document.getElementById('logoutButton');
+  const loginError = document.getElementById('loginError');
+  const bookmarksList = document.getElementById('bookmarksList');
   
-    // Function to display bookmarks (fetching from backend)
-    function displayBookmarks() {
-      fetch('/api/bookmarks') // Fetch bookmarks from backend API
-        .then(response => response.json())
-        .then(data => {
-          bookmarksList.innerHTML = ''; // Clear previous bookmarks
-          data.forEach(bookmark => {
-            const bookmarkElement = document.createElement('div');
-            bookmarkElement.classList.add('bookmark');
-            bookmarkElement.innerHTML = `
-              <h3>${bookmark.title}</h3>
-              <p>${bookmark.url}</p>
-              <div class="actions">
-                <button onclick="editBookmark(${bookmark.id})">Edit</button>
-                <button onclick="deleteBookmark(${bookmark.id})">Delete</button>
-              </div>
-            `;
-            bookmarksList.appendChild(bookmarkElement);
-          });
-        })
-        .catch(error => {
-          console.error('Error fetching bookmarks:', error);
-        });
-    }
-  
-    // Function to edit a bookmark (replace with actual implementation)
-    function editBookmark(bookmarkId) {
-      // Implement edit functionality
-      // Example:
-      // Redirect to a dedicated edit page or open a modal for editing
-      console.log(`Editing bookmark with ID ${bookmarkId}`);
-    }
-  
-    // Function to delete a bookmark (replace with actual implementation)
-    function deleteBookmark(bookmarkId) {
-      // Implement delete functionality
-      // Example:
-      // Send a DELETE request to the backend API to delete the bookmark
-      fetch(`/api/bookmarks/${bookmarkId}`, {
-        method: 'DELETE'
-      })
-      .then(response => {
-        if (response.ok) {
-          // Bookmark deleted successfully, refresh the list
-          displayBookmarks();
-        } else {
-          // Handle error response
-          console.error('Failed to delete bookmark');
-        }
-      })
-      .catch(error => {
-        console.error('Error deleting bookmark:', error);
-      });
-    }
-  
-    // Event listener for form submission (adding a bookmark)
-    addBookmarkForm.addEventListener('submit', function(event) {
-      event.preventDefault();
-      const bookmarkTitle = document.getElementById('bookmarkTitle').value;
-      const bookmarkURL = document.getElementById('bookmarkURL').value;
-  
-      // Send data to backend to add a new bookmark
-      fetch('/api/bookmarks', {
-        method: 'POST',
-        body: JSON.stringify({ title: bookmarkTitle, url: bookmarkURL }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => {
-        if (response.ok) {
-          // Bookmark added successfully, refresh the list
-          displayBookmarks();
-          addBookmarkForm.reset(); // Reset form fields
-        } else {
-          // Handle error response
-          console.error('Failed to add bookmark');
-        }
-      })
-      .catch(error => {
-        console.error('Error adding bookmark:', error);
-      });
+  // Function to authenticate user
+  function authenticateUser(username, password) {
+    // Your authentication logic here (e.g., check credentials against a hardcoded list)
+    // For demo purposes, let's assume username: "user123", password: "password123" for authentication
+    return (username === "user123" && password === "password123");
+  }
+
+  // Function to display bookmarks
+  function displayBookmarks() {
+    const storedBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+    bookmarksList.innerHTML = '';
+    storedBookmarks.forEach(bookmark => {
+      const bookmarkElement = document.createElement('div');
+      bookmarkElement.innerHTML = `<h3>${bookmark.title}</h3><p>${bookmark.url}</p>`;
+      bookmarksList.appendChild(bookmarkElement);
     });
-  
-    // Load bookmarks when the page loads
-    displayBookmarks();
+  }
+
+  // Event listener for login form submission
+  loginForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const authenticated = authenticateUser(username, password);
+    if (authenticated) {
+      loginError.style.display = 'none';
+      loginSection.style.display = 'none';
+      bookmarksSection.style.display = 'block';
+      addBookmarkSection.style.display = 'block';
+      displayBookmarks();
+    } else {
+      loginError.style.display = 'block';
+    }
   });
-  
+
+  // Event listener for logout button
+  logoutButton.addEventListener('click', function() {
+    localStorage.removeItem('bookmarks');
+    loginSection.style.display = 'block';
+    bookmarksSection.style.display = 'none';
+    addBookmarkSection.style.display = 'none';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+  });
+
+  // Function to add bookmark
+  function addBookmark(event) {
+    event.preventDefault();
+    const title = document.getElementById('bookmarkTitle').value;
+    const url = document.getElementById('bookmarkURL').value;
+    const bookmark = { title, url };
+    const storedBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+    storedBookmarks.push(bookmark);
+    localStorage.setItem('bookmarks', JSON.stringify(storedBookmarks));
+    displayBookmarks();
+    document.getElementById('bookmarkTitle').value = '';
+    document.getElementById('bookmarkURL').value = '';
+  }
+
+  // Event listener for adding a new bookmark
+  document.getElementById('addBookmarkForm').addEventListener('submit', addBookmark);
+});

@@ -1,46 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Bookmark Manager</title>
+  <title>Advanced Bookmark Manager</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Welcome to Bookmark Manager</h1>
-  </header>
+  <!-- Login/Logout Section -->
+  <section id="login-section">
+    <!-- Login form and logout button -->
+    <!-- Include fields for username, password, and login button -->
+    <!-- Include a logout button for authenticated users -->
+  </section>
 
-  <main>
-    <section class="bookmark-section">
-      <h2>My Bookmarks</h2>
-      <div id="bookmarks-list">
-        <!-- Display Bookmarks Here -->
-        <!-- Example Structure: -->
-        <!--
-        <div class="bookmark">
-          <h3>Bookmark Title</h3>
-          <p>Bookmark URL</p>
-          <div class="actions">
-            <button>Edit</button>
-            <button>Delete</button>
-          </div>
-        </div>
-        -->
-      </div>
-    </section>
+  <!-- Bookmarks Display Section -->
+  <section id="bookmarks-section">
+    <!-- Display bookmarks fetched from the backend API -->
+    <!-- Bookmarks will be displayed here with options for editing and deleting -->
+  </section>
 
-    <section class="add-bookmark-section">
-      <h2>Add a Bookmark</h2>
-      <form id="addBookmarkForm">
-        <label for="bookmarkTitle">Title:</label>
-        <input type="text" id="bookmarkTitle" name="bookmarkTitle" required><br><br>
-        
-        <label for="bookmarkURL">URL:</label>
-        <input type="url" id="bookmarkURL" name="bookmarkURL" required><br><br>
-        
-        <button type="submit">Add Bookmark</button>
-      </form>
-    </section>
-  </main>
+  <!-- Add Bookmark Section -->
+  <section id="add-bookmark-section">
+    <!-- Form to add new bookmarks -->
+    <!-- Include fields for title, URL, category/tag selection, and add button -->
+  </section>
 
   <script src="script.js"></script>
 </body>
