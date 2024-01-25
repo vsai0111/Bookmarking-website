@@ -1,51 +1,69 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // Function to send data to the linked website
-  const sendDataToWebsite = (data) => {
-    window.postMessage({ type: 'FROM_EXTENSION', data: data }, '*');
+  // Function to send data to the extension
+  const sendDataToExtension = (data) => {
+    chrome.runtime.sendMessage({ type: 'FROM_WEBSITE', data: data });
   };
 
-  // Function to display bookmarks on the popup
+  // Function to display bookmarks on the website
   const displayBookmarks = (bookmarks) => {
-    // Modify this function based on your existing popup UI
-    // For example, update a list of bookmarks in the popup
-    console.log('Displaying bookmarks in the popup:', bookmarks);
-  };
-
-  // Function to add a bookmark and notify the website
-  const addBookmarkAndNotify = (newBookmark) => {
-    chrome.storage.sync.get('bookmarks', (data) => {
-      const existingBookmarks = data.bookmarks || [];
-      const updatedBookmarks = [...existingBookmarks, newBookmark];
-
-      chrome.storage.sync.set({ bookmarks: updatedBookmarks }, () => {
-        alert(`Added bookmark "${newBookmark.title}" to your collection!`);
-        sendDataToWebsite(updatedBookmarks); // Notify the website about the changes
-      });
+    const bookmarksContainer = document.getElementById('bookmarks-container');
+    if (!bookmarksContainer) {
+      console.error('Bookmarks container element not found.');
+      return;
+    }
+    bookmarksContainer.innerHTML = ''; // Clear previous bookmarks
+    bookmarks.forEach(bookmark => {
+      const bookmarkElement = createBookmarkElement(bookmark);
+      bookmarksContainer.appendChild(bookmarkElement);
     });
   };
 
-  // Existing code to get and display bookmarks in the popup
-  const addBookmarkButton = document.getElementById('addBookmarkButton');
-  if (addBookmarkButton) {
-    addBookmarkButton.addEventListener('click', () => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const currentTab = tabs[0];
-        const newBookmark = { title: currentTab.title, url: currentTab.url };
-        addBookmarkAndNotify(newBookmark); // Call the modified function to add and notify
-      });
+  // Function to create bookmark element
+  const createBookmarkElement = (bookmark) => {
+    const bookmarkElement = document.createElement('div');
+    bookmarkElement.classList.add('bookmark');
+    bookmarkElement.innerHTML = `
+      <h3>${bookmark.title}</h3>
+      <p><a href="${bookmark.url}" target="_blank">${bookmark.url}</a></p>
+      <button class="delete-button">Delete</button>
+    `;
+    bookmarkElement.querySelector('.delete-button').addEventListener('click', () => deleteBookmark(bookmark));
+    return bookmarkElement;
+  };
+
+  // Function to delete bookmark
+  const deleteBookmark = (bookmark) => {
+    if (!confirm(`Are you sure you want to delete "${bookmark.title}"?`)) {
+      return;
+    }
+    sendDataToExtension({ action: 'delete', bookmark: bookmark });
+  };
+
+  // Function to add a bookmark and notify the extension
+  const addBookmarkAndNotify = (newBookmark) => {
+    sendDataToExtension({ action: 'add', bookmark: newBookmark });
+  };
+
+  // Event listener for the form submission to add a bookmark
+  const addBookmarkForm = document.getElementById('addBookmarkForm');
+  if (addBookmarkForm) {
+    addBookmarkForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const bookmarkTitle = document.getElementById('bookmarkTitle').value;
+      const bookmarkURL = document.getElementById('bookmarkURL').value;
+      const newBookmark = { title: bookmarkTitle, url: bookmarkURL };
+      addBookmarkAndNotify(newBookmark);
+      addBookmarkForm.reset();
     });
   }
 
-  // Listen for messages from the website
-  window.addEventListener('message', function (event) {
-    if (event.source === window && event.data.type === 'FROM_WEBSITE') {
-      const receivedData = event.data.data;
+  // Listen for messages from the extension
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === 'FROM_EXTENSION') {
+      const receivedData = message.data;
       if (Array.isArray(receivedData)) {
-        // Update local storage with the received data
-        chrome.storage.sync.set({ bookmarks: receivedData }, () => {
-          // Refresh the display with the updated data
-          displayBookmarks(receivedData);
-        });
+        // Display the bookmarks on the website
+        displayBookmarks(receivedData);
       }
     }
   });
