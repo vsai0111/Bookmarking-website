@@ -68,5 +68,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Other existing code...
+  // Load and display bookmarks on website page load
+  chrome.storage.sync.get('bookmarks', (data) => {
+    const bookmarks = data.bookmarks || [];
+    displayBookmarks(bookmarks);
+  });
+
+  // Listen for changes in bookmarks from the extension and update the website
+  chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (namespace === 'sync' && changes.bookmarks) {
+      const updatedBookmarks = changes.bookmarks.newValue;
+      displayBookmarks(updatedBookmarks);
+    }
+  });
 });
