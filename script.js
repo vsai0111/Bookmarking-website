@@ -51,7 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
       event.preventDefault();
       const bookmarkTitle = document.getElementById('bookmarkTitle').value;
       const bookmarkURL = document.getElementById('bookmarkURL').value;
-      const newBookmark = { title: bookmarkTitle, url: bookmarkURL };
+      const bookmarkCollection = document.getElementById('bookmarkCollection').value; // Added line
+      const newBookmark = { title: bookmarkTitle, url: bookmarkURL, collection: bookmarkCollection }; // Updated line
       addBookmarkAndNotify(newBookmark);
       addBookmarkForm.reset();
     });

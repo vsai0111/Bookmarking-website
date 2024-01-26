@@ -13,9 +13,9 @@
   <main>
     <section class="bookmarks-section">
       <h2>My Bookmarks</h2>
-      <ul id="bookmarks-list">
+      <div id="bookmarks-container">
         <!-- Bookmarks will be displayed here -->
-      </ul>
+      </div>
     </section>
 
     <section class="add-bookmark-section">
@@ -26,6 +26,9 @@
         
         <label for="bookmarkURL">URL:</label>
         <input type="url" id="bookmarkURL" name="bookmarkURL" required><br><br>
+
+        <label for="bookmarkCollection">Collection:</label>
+        <input type="text" id="bookmarkCollection" name="bookmarkCollection" required><br><br>
         
         <button type="submit">Add Bookmark</button>
       </form>
